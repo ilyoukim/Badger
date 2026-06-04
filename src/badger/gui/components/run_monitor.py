@@ -522,7 +522,7 @@ class BadgerOptMonitor(QWidget):
 
         # Quick-n-dirty fix to the auto range issue
         self.eval_count += 1
-        if self.eval_count < 2:
+        if self.eval_count < 6:
             self.enable_auto_range()
 
         self.sig_progress.emit(self.routine.data.tail(1))
@@ -1115,3 +1115,41 @@ def set_data(names: List[str], curves: dict, data: pd.DataFrame, ts=None):
         curves[name + "_hist"].setData(
             hist_x, not_live_data[name].to_numpy(dtype=np.double)
         )
+
+    if names:
+        # Update viewbox limits
+        set_vb_limits(names, curves, live_data, live_x)
+
+
+def set_vb_limits(names: List[str], curves: dict, live_data: pd.DataFrame, live_x: np.ndarray):
+    # Update viewbox limits based on live data
+    x_min = live_x[0]
+    x_max = live_x[-1]
+    y_min = live_data[names].values.min()
+    y_max = live_data[names].values.max()
+
+    if x_min == x_max:
+        x_margin = 1
+    else:
+        x_margin = max(0.5, abs(x_max - x_min) * 0.01)
+    
+    if y_min == y_max:
+        y_margin = abs(y_max) * 0.05
+    else:
+        y_margin = (y_max - y_min) * 0.05
+
+    x_min = x_min - x_margin
+    x_max = x_max + x_margin
+    y_min = y_min - y_margin
+    y_max = y_max + y_margin
+
+    if len(live_x) < 5:
+        min_xrange = x_margin
+    else:
+        min_xrange = abs(live_x[4] - live_x[0])
+    
+    min_yrange = y_margin * 0.2
+
+    vb = curves[names[0]].getViewBox()
+    vb.setLimits(xMin=x_min, xMax=x_max, yMin=y_min, yMax=y_max)
+    vb.setLimits(minXRange=min_xrange, minYRange=min_yrange)
