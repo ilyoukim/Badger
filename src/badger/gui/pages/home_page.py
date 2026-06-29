@@ -223,7 +223,7 @@ class BadgerHomePage(QWidget):
         self.history_browser.history_tree_widget.itemSelectionChanged.connect(
             self.go_run
         )
-
+        
         self.template_browser.template_tree_view.clicked.connect(self.go_template)
 
         self.routine_editor.sig_load_template.connect(self.update_status)
@@ -277,6 +277,10 @@ class BadgerHomePage(QWidget):
         # Assign shortcuts
         self.shortcut_go_search = QShortcut(QKeySequence("Ctrl+L"), self)
         self.shortcut_go_search.activated.connect(self.go_search)
+        
+        self.shortcut_history = QShortcut(QKeySequence("F5"), self.history_browser.history_tree_widget)
+        self.shortcut_history.setContext(Qt.ShortcutContext.WidgetShortcut)
+        self.shortcut_history.activated.connect(self.load_all_runs)
 
     def go_search(self):
         logger.info("Activating search bar.")
