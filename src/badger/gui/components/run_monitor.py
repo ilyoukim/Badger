@@ -1093,6 +1093,7 @@ def create_cursor_line():
 
 
 def set_data(names: List[str], curves: dict, data: pd.DataFrame, ts=None):
+    # Update live/historical curve data and refresh viewbox limits.
     # Split data into live and not live
     live_mask = data["live"].astype(bool)
     live_data = data.loc[live_mask]
@@ -1117,3 +1118,39 @@ def set_data(names: List[str], curves: dict, data: pd.DataFrame, ts=None):
         curves[name + "_hist"].setData(
             hist_x, not_live_data[name].to_numpy(dtype=np.double)
         )
+
+    # Update viewbox limits and range
+    if names:
+        set_vb_limits(names, curves, live_data, live_x)
+
+
+def set_vb_limits(names: List[str], curves: dict, live_data: pd.DataFrame, live_x: np.ndarray):
+    # Compute and apply viewbox axis limits and minimum ranges.
+    x_min = live_x.min()
+    x_max = live_x.max()
+    y_min = live_data[names].values.min()
+    y_max = live_data[names].values.max()
+
+    x_margin = max(1, abs(x_max - x_min) * 0.01)
+    
+    if y_max > y_min:
+        y_margin = (y_max - y_min) * 0.05
+    else:
+        y_margin = abs(y_max) * 0.05
+
+    x_min -= x_margin
+    x_max += x_margin
+    y_min -= y_margin
+    y_max += y_margin
+
+    if len(live_x) < 6:
+        min_xrange = x_margin
+    else:
+        min_xrange = abs(live_x[4] - live_x[0])
+    
+    vb = curves[names[0]].getViewBox()
+    vb.setLimits(xMin=x_min, xMax=x_max, yMin=y_min, yMax=y_max)
+    vb.setLimits(minXRange=min_xrange, minYRange=y_margin * 0.2)
+
+    if len(live_x) < 6:
+        vb.enableAutoRange()
