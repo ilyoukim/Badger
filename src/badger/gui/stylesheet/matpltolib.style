@@ -1,0 +1,113 @@
+# https://matplotlib.org/stable/users/explain/customizing.html
+# https://matplotlib.org/3.1.0/gallery/style_sheets/style_sheets_reference.html
+# PATH: ${PYTHON}/Lib/site-packages/matplotlib/mpl-data/stylelib
+
+## ***************************************************************************
+## * LINES                                                                   *
+## ***************************************************************************
+lines.linewidth: 1
+lines.markeredgewidth: 0.5
+lines.markersize: 3
+#lines.antialiased: True
+
+
+## ***************************************************************************
+## * BOXPLOT                                                                 *
+## ***************************************************************************
+boxplot.showbox: False
+
+
+## ***************************************************************************
+## * FONT                                                                    *
+## ***************************************************************************
+#font.size: 11
+font.family: serif
+
+
+## ***************************************************************************
+## * AXES                                                                    *
+## ***************************************************************************
+#axes.titlesize: medium
+#axes.edgecolor: 707070
+#axes.labelsize: small
+#axes.linewidth: 1
+axes.formatter.useoffset: False
+
+axes.xmargin:   .01
+axes.ymargin:   .01
+axes.zmargin:   .01
+
+
+## ***************************************************************************
+## * TICKS                                                                   *
+## ***************************************************************************
+xtick.minor.visible : True
+ytick.minor.visible : True
+#xtick.labelsize: small
+#ytick.labelsize: small
+#xtick.color: 303030
+#ytick.color: 303030
+
+
+## ***************************************************************************
+## * GRIDS                                                                   *
+## ***************************************************************************
+grid.color: C0C0C0
+grid.linewidth: 0.5
+grid.linestyle: :
+
+
+## ***************************************************************************
+## * LEGEND                                                                  *
+## ***************************************************************************
+#legend.facecolor: white
+legend.frameon: True
+legend.framealpha: 0.5
+#legend.edgecolor: 1
+
+#legend.numpoints: 1
+#legend.markerscale : 0.5
+legend.fontsize: small
+
+#legend.borderpad: 0.3  # border whitespace
+legend.labelspacing: 0.4
+#legend.handlelength: 1.4
+#legend.handletextpad : 0.5
+#legend.borderaxespad: .2
+#legend.columnspacing: 2
+
+
+## ***************************************************************************
+## * FIGURE                                                                  *
+## ***************************************************************************
+figure.frameon: True
+figure.titlesize: large
+figure.subplot.wspace: 0.1
+figure.subplot.hspace: 0.1
+
+## Figure layout
+figure.autolayout: False
+
+
+## ***************************************************************************
+## * AGG RENDERING                                                           *
+## ***************************************************************************
+# chunk up large lines into smaller lines!
+# simple trick to avoid those pesky O(>n) algorithms!
+agg.path.chunksize: 10000
+
+
+## ***************************************************************************
+## * PATHS                                                                   *
+## ***************************************************************************
+# Maximally simplify lines.
+path.simplify: True
+#path.simplify_threshold: 1.0
+
+
+## ***************************************************************************
+## * SAVING FIGURES                                                          *
+## ***************************************************************************
+## The default savefig parameters can be different from the display parameters
+## e.g., you may want a higher resolution, or to make the figure
+#savefig.dpi:       150      # figure dots per inch or 'figure'
