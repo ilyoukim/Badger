@@ -285,6 +285,13 @@ class BadgerHomePage(QWidget):
         self.shortcut_go_search = QShortcut(QKeySequence("Ctrl+L"), self)
         self.shortcut_go_search.activated.connect(self.go_search)
 
+        self.shortcut_history = QShortcut(QKeySequence("F4"), self.history_browser.history_tree_widget)
+        self.shortcut_history.setContext(Qt.ShortcutContext.WidgetShortcut)
+        self.shortcut_history.activated.connect(self.load_all_runs)
+
+        self.shortcut_refresh = QShortcut(QKeySequence("F5"), self)
+        self.shortcut_refresh.activated.connect(self.go_run)
+
     def go_search(self):
         logger.info("Activating search bar.")
         self.sbar.setFocus()
