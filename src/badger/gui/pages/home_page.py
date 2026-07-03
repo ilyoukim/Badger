@@ -220,6 +220,7 @@ class BadgerHomePage(QWidget):
         self.run_table_2.cellClicked.connect(self.solution_selected)
         self.run_table_2.itemSelectionChanged.connect(self.table_selection_changed)
 
+        self.history_browser.history_tree_widget.itemClicked.connect(self.go_run)
         self.history_browser.history_tree_widget.itemSelectionChanged.connect(
             self.go_run
         )
@@ -281,6 +282,9 @@ class BadgerHomePage(QWidget):
         self.shortcut_history = QShortcut(QKeySequence("F5"), self.history_browser.history_tree_widget)
         self.shortcut_history.setContext(Qt.ShortcutContext.WidgetShortcut)
         self.shortcut_history.activated.connect(self.load_all_runs)
+
+        self.shortcut_refresh = QShortcut(QKeySequence("F6"), self)
+        self.shortcut_refresh.activated.connect(self.go_run)
 
     def go_search(self):
         logger.info("Activating search bar.")
