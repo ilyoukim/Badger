@@ -211,7 +211,7 @@ def calculate_variable_bounds(limit_options, vocs, env):
     vnames = vocs.variable_names
     var_curr = env.get_variables(vnames)
     var_range = env.get_bounds(vnames)
-
+    
     variables_updated = {}
     for name in vnames:
         try:
@@ -221,13 +221,20 @@ def calculate_variable_bounds(limit_options, vocs, env):
             continue
 
         option_idx = limit_option["limit_option_idx"]
-        if option_idx:
+        if option_idx == 1:
             ratio = limit_option["ratio_full"]
             hard_bounds = var_range[name]
             delta = 0.5 * ratio * (hard_bounds[1] - hard_bounds[0])
             bounds = [var_curr[name] - delta, var_curr[name] + delta]
             bounds = np.clip(bounds, hard_bounds[0], hard_bounds[1]).tolist()
             logger.debug(f"Updated bounds for {name} (full): {bounds}")
+            variables_updated[name] = bounds
+        elif option_idx == 2:
+            delta = limit_option["delta"]
+            hard_bounds = var_range[name]
+            bounds = [var_curr[name] - delta, var_curr[name] + delta]
+            bounds = np.clip(bounds, hard_bounds[0], hard_bounds[1]).tolist()
+            logger.debug(f"Updated bounds for {name} (delta): {bounds}")
             variables_updated[name] = bounds
         else:
             ratio = limit_option["ratio_curr"]
