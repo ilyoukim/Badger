@@ -226,10 +226,14 @@ class VariableTable(QTableWidget):
         self._set_spinbox_text_color(row, is_selected)
 
     def set_bounds(
-        self, variables: dict[str, tuple[float, float]], signal: bool = True
+        self, variables: dict[str, tuple[float, float] | ContinuousVariable], signal: bool = True
     ):
         for name in variables:
-            self.bounds[name] = variables[name]
+            _bounds = variables[name]
+            self.bounds[name] = (_bounds.domain
+                if isinstance(_bounds, ContinuousVariable)
+                else _bounds
+            )
 
         if signal:
             self.update_variables(self.variables, 2)
