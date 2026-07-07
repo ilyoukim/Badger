@@ -415,8 +415,10 @@ class BadgerHomePage(QWidget):
         logger.info(f"Toggling lock: {lock}, tab: {lock_tab}")
         if lock:
             self.history_browser.setDisabled(True)
+            self.shortcut_refresh.setEnabled(False)
         else:
             self.history_browser.setDisabled(False)
+            self.shortcut_refresh.setEnabled(True)
 
             self.uncover_page()
 
