@@ -42,13 +42,12 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QScrollArea
 from PyQt5.QtWidgets import QTableWidgetItem, QPlainTextEdit
 from coolname import generate_slug
 from xopt import VOCS
-from xopt.vocs import random_inputs
 from xopt.generators import (
     get_generator_defaults,
     all_generator_names,
     get_generator_dynamic,
 )
-from xopt.vocs import get_local_region
+from xopt.vocs import get_local_region, random_inputs
 from gest_api.vocs import (
     BaseConstraint,
     BaseObjective,
