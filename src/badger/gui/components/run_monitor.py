@@ -1106,8 +1106,8 @@ def set_data(names: List[str], curves: dict, data: pd.DataFrame, ts=None):
 
     # Determine x-axis data
     if ts is not None:
-        live_x = [ts[i] for i in live_data.index.tolist()]
-        hist_x = [ts[i] for i in not_live_data.index.tolist()]
+        live_x = np.asarray([ts[i] for i in live_data.index.tolist()])
+        hist_x = np.asarray([ts[i] for i in not_live_data.index.tolist()])
     else:
         live_x = live_data.index.to_numpy(dtype=int)
         hist_x = not_live_data.index.to_numpy(dtype=int)
@@ -1121,15 +1121,23 @@ def set_data(names: List[str], curves: dict, data: pd.DataFrame, ts=None):
 
     # Update viewbox limits and range
     if names:
-        set_vb_limits(names, curves, live_data, live_x)
+        data_x = np.concatenate((hist_x, live_x))
+        
+        set_vb_limits(names, curves, data, data_x)
 
 
-def set_vb_limits(names: List[str], curves: dict, live_data: pd.DataFrame, live_x: np.ndarray):
+def set_vb_limits(names: List[str], curves: dict, data: pd.DataFrame, data_x: np.ndarray):
     # Compute and apply viewbox axis limits and minimum ranges.
-    x_min = live_x.min()
-    x_max = live_x.max()
-    y_min = live_data[names].values.min()
-    y_max = live_data[names].values.max()
+    data_x = np.unique(data_x)  # Ensure unique and sorted
+
+    if len(data_x) == 0:
+        return  # No data to set limits
+    
+    x_min = data_x[0]
+    x_max = data_x[-1]
+
+    y_min = data[names].values.min()
+    y_max = data[names].values.max()
 
     x_margin = max(1, abs(x_max - x_min) * 0.01)
     
@@ -1143,14 +1151,14 @@ def set_vb_limits(names: List[str], curves: dict, live_data: pd.DataFrame, live_
     y_min -= y_margin
     y_max += y_margin
 
-    if len(live_x) < 6:
+    if len(data_x) < 6:
         min_xrange = x_margin
     else:
-        min_xrange = abs(live_x[4] - live_x[0])
+        min_xrange = abs(data_x[4] - data_x[0])
     
     vb = curves[names[0]].getViewBox()
     vb.setLimits(xMin=x_min, xMax=x_max, yMin=y_min, yMax=y_max)
     vb.setLimits(minXRange=min_xrange, minYRange=y_margin * 0.2)
 
-    if len(live_x) < 6:
+    if len(data_x) < 6:
         vb.enableAutoRange()
